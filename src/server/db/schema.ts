@@ -24,7 +24,7 @@ export const users = createTable(
     email: varchar("email", { length: 255 }).notNull().unique(),
     emailVerified: timestamp("emailVerified", {
       mode: "date",
-    }).default(sql`CURRENT_TIMESTAMP`),
+    }).defaultNow(),
     image: varchar("image", { length: 255 }),
     created_at: timestamp("created_at", { withTimezone: true }).defaultNow(),
     updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow(),
