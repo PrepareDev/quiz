@@ -1,5 +1,6 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
+import { getBaseUrl } from "./utils/api";
 
 export const env = createEnv({
   /**
@@ -15,7 +16,10 @@ export const env = createEnv({
       process.env.NODE_ENV === "production"
         ? z.string()
         : z.string().optional(),
-    NEXTAUTH_URL: z.string().optional(),
+    NEXTAUTH_URL: z.preprocess(
+      () => getBaseUrl(),
+      z.string().url()
+    ),
     GITHUB_CLIENT_ID: z.string(),
     GITHUB_CLIENT_SECRET: z.string(),
   },
