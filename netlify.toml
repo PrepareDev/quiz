@@ -1,0 +1,9 @@
+[build]
+  command = "next build"
+  publish = ".next"
+
+[context.production]
+  command = "NEXTAUTH_URL=$URL next build"
+
+[context.deploy-preview]
+	command = "NEXTAUTH_URL=$DEPLOY_PRIME_URL next build"
