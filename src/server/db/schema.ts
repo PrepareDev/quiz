@@ -105,7 +105,7 @@ export const userAnswers = createTable("user_answer", {
 
 export const quizResults = createTable("quiz_reqult", {
   id: serial("id").primaryKey(),
-  user_id: integer("user_id")
+  user_id: varchar("user_id")
     .notNull()
     .references(() => users.id),
   quiz_id: integer("quiz_id")
