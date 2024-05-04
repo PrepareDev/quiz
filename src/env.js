@@ -1,6 +1,16 @@
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
-import { getBaseUrl } from "./utils/api";
+
+const getAuthUrl = () => {
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`; // SSR should use vercel url
+  if (process.env.NETLIFY) {
+    if (process.env.CONTEXT === "production") {
+      return process.env.URL;
+    }
+    return process.env.DEPLOY_PRIME_URL;
+  }
+  return `http://localhost:${process.env.PORT ?? 3000}`; // dev SSR should use localhost
+};
 
 export const env = createEnv({
   /**
@@ -17,7 +27,7 @@ export const env = createEnv({
         ? z.string()
         : z.string().optional(),
     NEXTAUTH_URL: z.preprocess(
-      () => getBaseUrl(),
+      () => getAuthUrl(),
       z.string().url()
     ),
     GITHUB_CLIENT_ID: z.string(),
