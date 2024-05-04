@@ -26,6 +26,8 @@ export const users = createTable(
       mode: "date",
     }).default(sql`CURRENT_TIMESTAMP`),
     image: varchar("image", { length: 255 }),
+    created_at: timestamp("created_at", { withTimezone: true }).defaultNow(),
+    updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow(),
   },
   (table) => ({
     emailIdx: uniqueIndex("email_idx").on(table.email),
@@ -35,6 +37,8 @@ export const users = createTable(
 export const categories = createTable("category", {
   id: serial("id").primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
 export const quizes = createTable("quiz", {
@@ -46,6 +50,8 @@ export const quizes = createTable("quiz", {
   category_id: integer("category_id")
     .notNull()
     .references(() => categories.id),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
 export const questionType = pgEnum("question_type", [
@@ -62,6 +68,8 @@ export const answers = createTable("answer", {
     .notNull()
     .references(() => questions.id),
   is_valid: boolean("is_valid").notNull(),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
 export const questions = createTable("question", {
@@ -73,6 +81,8 @@ export const questions = createTable("question", {
   quiz_id: integer("quiz_id")
     .notNull()
     .references(() => quizes.id),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
 export const userAnswers = createTable("user_answer", {
@@ -89,6 +99,8 @@ export const userAnswers = createTable("user_answer", {
   question_id: integer("question_id")
     .notNull()
     .references(() => questions.id),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
 export const userAnswersRelations = relations(userAnswers, ({ one }) => ({
