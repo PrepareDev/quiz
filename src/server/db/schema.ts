@@ -103,6 +103,22 @@ export const userAnswers = createTable("user_answer", {
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
+export const quizResults = createTable("quiz_reqult", {
+  id: serial("id").primaryKey(),
+  user_id: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  quiz_id: integer("quiz_id")
+    .notNull()
+    .references(() => quizes.id),
+  valid_percentage: integer("valid_percentage").notNull(),
+});
+
+export const quizResultsRelations = relations(quizResults, ({ one }) => ({
+  quiz: one(quizes),
+  user: one(users),
+}));
+
 export const userAnswersRelations = relations(userAnswers, ({ one }) => ({
   user: one(users),
   answer: one(answers),
@@ -126,6 +142,7 @@ export const quizesRelations = relations(quizes, ({ one, many }) => ({
   category: one(categories),
   creator: one(users),
   questions: many(questions),
+  results: many(quizResults),
 }));
 
 export const accounts = createTable(
@@ -160,6 +177,7 @@ export const accounts = createTable(
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   createdQuizes: many(quizes),
+  completedQuizesResult: many(quizResults),
 }));
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
