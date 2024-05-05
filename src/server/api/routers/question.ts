@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { questions } from "~/server/db/schema";
-
+import { answers, questions } from "~/server/db/schema";
+import { eq } from "drizzle-orm";
 export const questionsRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
@@ -40,4 +40,25 @@ export const questionsRouter = createTRPCRouter({
         }
       return rows[0]!; //handled one line ahead
     }),
+    getAnswersByQuestionId: protectedProcedure
+    .input(z.object({
+      question_id: z.number(),
+    }))
+    .output(
+      z.array(
+        z.object({
+          id: z.number(),
+          created_at: z.nullable(z.date()),
+          updated_at: z.nullable(z.date()),
+          text: z.string(),
+          question_id: z.number(),
+          is_valid: z.boolean()
+        })
+    ))
+    .query(async ({ctx, input}) => {
+      return await ctx.db
+      .select()
+      .from(answers)
+      .where(eq(answers.question_id, input.question_id))
+    })
 });

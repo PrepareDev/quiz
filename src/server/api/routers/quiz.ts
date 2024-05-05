@@ -1,7 +1,8 @@
+import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { quizes } from "~/server/db/schema";
+import { questions, quizes } from "~/server/db/schema";
 
 export const quizRouter = createTRPCRouter({
   // test later
@@ -34,4 +35,28 @@ export const quizRouter = createTRPCRouter({
       }
       return rows[0]!; // handled on line ahead
     }),
+    getQuestionsById: protectedProcedure
+    .input(
+      z.object({
+        quiz_id: z.number(),
+      })
+    )
+    .output(
+      z.array(z.object({
+        id: z.number(),
+        image: z.nullable(z.string()),
+        created_at: z.nullable(z.date()),
+        updated_at: z.nullable(z.date()),
+        text: z.string(),
+        order: z.number(),
+        type: z.enum(["many", "single", "text", "number"]),
+        quiz_id: z.number()
+      })
+    ))
+    .query(async ({ctx, input}) => {
+      return await ctx.db
+      .select()
+      .from(questions)
+      .where(eq(questions.quiz_id, input.quiz_id))
+    })
 });
