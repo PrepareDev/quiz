@@ -1,35 +1,33 @@
 import { z } from "zod";
 
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { answers } from "~/server/db/schema";
+import { questions } from "~/server/db/schema";
 
 export const questionsRouter = createTRPCRouter({
   create: protectedProcedure
     .input(
       z.object({
         text: z.string(),
-        type: z.enum([
-        "many",
-        "single",
-        "text",
-        "number",
-      ]),
-        quiz_id: z.number(),
         image: z.string(),
         order: z.number(),
+        type: z.enum(["many", "single", "text", "number"]),
+        quiz_id: z.number(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const user = ctx.session.user;
-      const quiz = await ctx.db
-      .insert(answers)
-      .values({
-        text: input.text,
-        type: input.type,
-        quiz_id: input.quiz_id,
-        image: input.image,
-        order: input.order,
-      });
-      return quiz;
+      const question = await ctx.db
+        .insert(questions)
+        .values({
+          text: input.text,
+          image: input.image,
+          order: input.order,
+          type: input.type,
+          quiz_id: input.quiz_id
+        })
+        .returning();
+        if (question.length > 1) {
+          throw new Error("Internal server error")
+        }
+      return question[0]!; //handled one line ahead
     }),
 });
