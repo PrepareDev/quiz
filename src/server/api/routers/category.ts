@@ -17,16 +17,16 @@ export const categoryRouter = createTRPCRouter({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const category = await ctx.db
+      const rows = await ctx.db
         .insert(categories)
         .values({
           name: input.name,
         })
         .returning();
-      if (category.length < 1) {
+      if (rows.length < 1) {
         throw new Error("Internal server error");
       }
-      return category[0]!; // handled on line ahead
+      return rows[0]!; // handled on line ahead
     }),
   getAll: protectedProcedure
     .output(
