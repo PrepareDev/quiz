@@ -8,11 +8,21 @@ export const questionsRouter = createTRPCRouter({
     .input(
       z.object({
         text: z.string(),
-        image: z.string(),
+        image: z.nullable(z.string()),
         order: z.number(),
         type: z.enum(["many", "single", "text", "number"]),
         quiz_id: z.number(),
       }),
+    )
+    .output(
+      z.object({
+        id: z.number(),
+        image: z.nullable(z.string()),
+        text: z.string(),
+        order: z.number(),
+        type: z.enum(["many", "single", "text", "number"]),
+        quiz_id: z.number(),
+      })
     )
     .mutation(async ({ ctx, input }) => {
       const question = await ctx.db
