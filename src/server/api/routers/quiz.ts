@@ -22,16 +22,16 @@ export const quizRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       const user = ctx.session.user;
-      const quiz = await ctx.db
+      const quizList = await ctx.db
       .insert(quizes)
       .values({
         name: input.name,
         creator_id: user.id,
         category_id: input.category_id,
       }).returning();
-      if (quiz.length < 1) {
+      if (quizList.length < 1) {
         throw new Error("Internal server error");
       }
-      return quiz[0]!; // handled on line ahead
+      return quizList[0]!; // handled on line ahead
     }),
 });

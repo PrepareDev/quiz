@@ -38,9 +38,8 @@ export const categoryRouter = createTRPCRouter({
       ),
     )
     .query(async ({ ctx }) => {
-      const category = await ctx.db
+      return await ctx.db
       .select()
       .from(categories);
-      return category;
     }),
 });
