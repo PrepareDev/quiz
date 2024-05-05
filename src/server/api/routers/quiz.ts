@@ -3,9 +3,8 @@ import { z } from "zod";
 import {
   createTRPCRouter,
   protectedProcedure,
-  publicProcedure,
 } from "~/server/api/trpc";
-import { quizes, users } from "~/server/db/schema";
+import { quizes } from "~/server/db/schema";
 
 export const quizRouter = createTRPCRouter({ // test later
   create: protectedProcedure

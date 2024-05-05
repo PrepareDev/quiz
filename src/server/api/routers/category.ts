@@ -1,12 +1,10 @@
 import { z } from "zod";
-import { db } from "~/server/db";
 
 import {
   createTRPCRouter,
   protectedProcedure,
-  publicProcedure,
 } from "~/server/api/trpc";
-import { categories, quizes, users } from "~/server/db/schema";
+import { categories } from "~/server/db/schema";
 
 export const categoryRouter = createTRPCRouter({ // test later
   create: protectedProcedure

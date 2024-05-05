@@ -1,4 +1,3 @@
-import type { InferGetStaticPropsType, GetStaticProps } from 'next'
 import { api } from "~/utils/api";
 
 
@@ -7,7 +6,7 @@ export default function Quiz() {
 
     return (
         <div>
-            {category.data ? category.data.map(el => <div>{el.id} {el.name}</div>) : <div>error</div>}
+            {category.data ? category.data.map(el => <div key={el.id}>{el.id} {el.name}</div>) : <div>error</div>}
         </div>
     )
 }
