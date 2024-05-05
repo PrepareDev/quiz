@@ -12,6 +12,14 @@ export const quizRouter = createTRPCRouter({
         category_id: z.number(),
       }),
     )
+    .output(
+      z.object({
+        id: z.number(),
+        name: z.string(),
+        creator_id: z.string(),
+        category_id: z.number(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
       const user = ctx.session.user;
       const quiz = await ctx.db
@@ -20,7 +28,10 @@ export const quizRouter = createTRPCRouter({
         name: input.name,
         creator_id: user.id,
         category_id: input.category_id,
-      });
-      return quiz;
+      }).returning();
+      if (quiz.length < 1) {
+        throw new Error("Internal server error");
+      }
+      return quiz[0]!; // handled on line ahead
     }),
 });

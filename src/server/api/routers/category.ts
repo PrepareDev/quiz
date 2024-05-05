@@ -38,10 +38,9 @@ export const categoryRouter = createTRPCRouter({
       ),
     )
     .query(async ({ ctx }) => {
-      const category = await ctx.db.select().from(categories);
-      if (category === undefined) {
-        throw new Error("internal server error");
-      }
+      const category = await ctx.db
+      .select()
+      .from(categories);
       return category;
     }),
 });
